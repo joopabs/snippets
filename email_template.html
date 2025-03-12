@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pilot Email Generator</title>
+    <!-- Aptos font (update URL as needed) -->
+    <link href="https://your-cdn.com/path/to/aptos.css" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      body { font-family: Aptos, Arial, sans-serif; }
+      .ticketRow { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; }
+      .impactItem label { margin-right: 10px; }
+      table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+      table, th, td { border: 1px solid #ccc; }
+      th, td { padding: 12px; text-align: left; }
+      .email-output { background: #f8f9fa; padding: 20px; border: 1px solid #ddd; min-height: 200px; }
+      .email-output li { margin-bottom: 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">Pilot Email Generator</h1>
+      <div class="row">
+        <!-- Form Column -->
+        <div class="col-md-6">
+          <form id="emailForm" autocomplete="off">
+            <!-- Component Name -->
+            <div class="row mb-3 align-items-center">
+              <label for="componentName" class="col-sm-4 col-form-label">Component Name:</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="componentName" name="componentName" value="Intellect Product Processors (CBOS Only)" required autocomplete="off" />
+              </div>
+            </div>
+            <!-- Deployment Date -->
+            <div class="row mb-3 align-items-center">
+              <label for="deploymentDate" class="col-sm-4 col-form-label">Deployment Date:</label>
+              <div class="col-sm-8">
+                <input type="date" class="form-control" id="deploymentDate" name="deploymentDate" required autocomplete="off" />
+              </div>
+            </div>
+            <!-- Deployment Time -->
+            <div class="row mb-3 align-items-center">
+              <label for="deploymentTime" class="col-sm-4 col-form-label">Schedule:</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="deploymentTime" name="deploymentTime" value="7-9PM, 1-2 hours" required autocomplete="off" />
+              </div>
+            </div>
+            <!-- Fix Details -->
+            <div class="row mb-3 align-items-center">
+              <label for="fixDetails" class="col-sm-4 col-form-label">Details of the fix:</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="fixDetails" name="fixDetails" value="-- No IMPACT to Retail" required autocomplete="off" />
+              </div>
+            </div>
+            <!-- Revert Plan as Textarea -->
+            <div class="row mb-3 align-items-center">
+              <label for="revertPlan" class="col-sm-4 col-form-label">Revert Plan:</label>
+              <div class="col-sm-8">
+                <textarea class="form-control" id="revertPlan" name="revertPlan" rows="4" required autocomplete="off">
+1. Database: DB Snapshot to be taken for restoration
+2. Images to be rolled back to the previous version
+                </textarea>
+              </div>
+            </div>
+            <!-- Validation Plan as Textarea -->
+            <div class="row mb-3 align-items-center">
+              <label for="validationPlan" class="col-sm-4 col-form-label">Validation Plan:</label>
+              <div class="col-sm-8">
+                <textarea class="form-control" id="validationPlan" name="validationPlan" rows="3" required autocomplete="off">
+Datum team to verify the image deployment and SQL changes
+                </textarea>
+              </div>
+            </div>
+            <!-- JIRA Tickets Section -->
+            <h3 class="mt-4">Tickets for deployment</h3>
+            <div class="mb-3">
+            <!-- Ticket URL Row -->
+              <div class="row mb-2 align-items-center">
+                <label for="ticketUrlInput" class="col-sm-3 col-form-label">Ticket URL:</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="ticketUrlInput" value="https://securitybank.atlassian.net/browse/BBX-NNNNNN" autocomplete="off" />
+                </div>
+              </div>
+              <!-- Summary Row -->
+              <div class="row align-items-center">
+                <label for="ticketSummaryInput" class="col-sm-3 col-form-label">Summary:</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="ticketSummaryInput" value="provide summary here" autocomplete="off" />
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <button type="button" id="addTicketBtn" class="btn btn-secondary me-2">Add Ticket</button>
+              <button type="button" id="clearTicketsBtn" class="btn btn-danger">Clear All Tickets</button>
+            </div>
+            <!-- Table for JIRA Tickets -->
+            <div class="ticket-table-container mb-3">
+              <table class="table table-bordered" id="ticketTable">
+                <thead class="table-light">
+                  <tr>
+                    <th>Sl.No</th>
+                    <th>Issue Key/Link</th>
+                    <th>Summary</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Tickets will be appended here -->
+                </tbody>
+              </table>
+            </div>
+            <!-- Impact Checkboxes -->
+            <h3 class="mt-4">Impact to other systems</h3>
+            <div class="row mb-3">
+              <div class="col">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="impactRetail" autocomplete="off" />
+                  <label class="form-check-label" for="impactRetail">Retail</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="impactCIAM" autocomplete="off" />
+                  <label class="form-check-label" for="impactCIAM">CIAM</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="impactIntellect" checked autocomplete="off" />
+                  <label class="form-check-label" for="impactIntellect">Intellect</label>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Email</button>
+          </form>
+        </div>
+        <!-- Email Output Column -->
+        <div class="col-md-6">
+          <div id="emailOutput" class="email-output">
+            <p class="text-muted">Your generated email will appear here after you click "Generate Email".</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Set default date to today once the DOM is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById("deploymentDate").value = new Date().toISOString().split("T")[0];
+      });
+
+      // Function to add a ticket to the table
+      function addTicket() {
+        const urlInput = document.getElementById("ticketUrlInput");
+        const summaryInput = document.getElementById("ticketSummaryInput");
+        const url = urlInput.value.trim();
+        const summary = summaryInput.value.trim();
+        if (!url || !summary) {
+          alert("Please enter both Ticket URL and Summary.");
+          return;
+        }
+        const tableBody = document.getElementById("ticketTable").querySelector("tbody");
+        const rowCount = tableBody.rows.length;
+        const newRow = tableBody.insertRow();
+        // Insert cells: Serial number, Issue Key/Link, Summary, and Action (delete button)
+        const cell0 = newRow.insertCell(0);
+        const cell1 = newRow.insertCell(1);
+        const cell2 = newRow.insertCell(2);
+        const cell3 = newRow.insertCell(3);
+        cell0.textContent = rowCount + 1;
+        let linkText = "BBX-NNNNNN";
+        if(url !== "https://securitybank.atlassian.net/browse/BBX-NNNNNN") {
+          const parts = url.split('/');
+          linkText = parts[parts.length - 1] || url;
+        }
+        cell1.innerHTML = `<a href="${url}" target="_blank">${linkText}</a>`;
+        cell2.textContent = summary;
+        cell3.innerHTML = `<button type="button" class="btn btn-sm btn-danger delete-ticket">Delete</button>`;
+        // Clear input fields
+        urlInput.value = "https://securitybank.atlassian.net/browse/BBX-NNNNNN";
+        summaryInput.value = "provide summary here";
+      }
+
+      // Event listener for Add Ticket button
+      document.getElementById("addTicketBtn").addEventListener("click", addTicket);
+
+      // Event listener for Clear Tickets button
+      document.getElementById("clearTicketsBtn").addEventListener("click", function() {
+        const tableBody = document.getElementById("ticketTable").querySelector("tbody");
+        tableBody.innerHTML = "";
+      });
+
+      // Delegate click event for delete buttons in the ticket table
+      document.getElementById("ticketTable").addEventListener("click", function(e) {
+        if (e.target && e.target.classList.contains("delete-ticket")) {
+          const row = e.target.closest("tr");
+          row.parentNode.removeChild(row);
+          // Update serial numbers
+          const rows = document.getElementById("ticketTable").querySelectorAll("tbody tr");
+          rows.forEach((r, index) => {
+            r.cells[0].textContent = index + 1;
+          });
+        }
+      });
+
+      // Email template with placeholders and paragraphs; <br> tags force new line for items 3.iv and 3.v
+      const emailTemplate = `
+        <div class="header">
+          <p>{DATE} - {COMPONENT_NAME} incremental sync to production</p>
+        </div>
+        <hr class="mb-3" />
+        <p>Hi,</p>
+        <p>Requesting to deploy <strong>{COMPONENT_NAME}</strong> incremental sync to production scheduled for today, <strong>{DATE}</strong>.</p>
+        <p>Implementation plan has been reviewed and signed-off.</p>
+        <p>Please find below pilot template for you reference:</p>
+        <ol>
+          <li><strong>Target component to apply the fix:</strong> {COMPONENT_NAME}</li>
+          <li>
+            <strong>Link to the JIRA tickets with description:</strong>
+            <br/>
+            {JIRA_TABLE}
+          </li>
+          <li>
+            <strong>Full scope (detail of fix, UAT result, downtime, revert plan):</strong>
+            <ol type="i" class="sub-list">
+              <li><strong>Details of the fix:</strong> {COMPONENT_NAME} <strong>{FIX_DETAILS}</strong></li>
+              <li><strong>UAT/Pre-prod results:</strong> Refer to JIRA ticket RCA and Resolution.</li>
+              <li><strong>Downtime:</strong> No Downtime.</li>
+              <li><strong>Revert Plan and if has been tested:</strong><br>{REVERT_PLAN}</li>
+              <li><strong>Validation Plan and if has been tested:</strong><br>{VALIDATION_PLAN}</li>
+            </ol>
+          </li>
+          <li>
+            <strong>Implementation schedule and duration:</strong> {DATE} <strong>{TIME}</strong>.
+          </li>
+          <li>
+            <strong>Will there be impact to the JIRA tickets listed above? If yes, indicate the details of the impact:</strong>
+            {IMPACT_CHECKBOXES}
+          </li>
+        </ol>
+      `;
+
+      // Functions to format date
+      function formatSubjectDate(dateStr) {
+        const dateObj = new Date(dateStr);
+        return dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      }
+      function formatFullDate(dateStr) {
+        const dateObj = new Date(dateStr);
+        return dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      }
+
+      document.getElementById("emailForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const componentNameInput = document.getElementById("componentName").value;
+        const dateInput = document.getElementById("deploymentDate").value;
+        const timeInput = document.getElementById("deploymentTime").value;
+        const fixDetailsInput = document.getElementById("fixDetails").value;
+        // Convert newlines in textareas to <br> tags
+        const revertPlanInput = document.getElementById("revertPlan").value.replace(/\n/g, "<br>");
+        const validationPlanInput = document.getElementById("validationPlan").value.replace(/\n/g, "<br>");
+        if (!dateInput) return;
+        const formattedDateFull = formatFullDate(dateInput);
+        const formattedDateSubject = formatSubjectDate(dateInput);
+
+        // Build the JIRA table HTML from the ticket table rows
+        const ticketRows = document.querySelectorAll("#ticketTable tbody tr");
+        let tableHTML = `
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Sl.No</th>
+                <th>Issue Key/Link</th>
+                <th>Summary</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        ticketRows.forEach((row, index) => {
+          const url = row.cells[1].querySelector("a").href;
+          const linkText = row.cells[1].querySelector("a").textContent;
+          const summary = row.cells[2].textContent;
+          tableHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td><a href="${url}" target="_blank">${linkText}</a></td>
+              <td>${summary}</td>
+            </tr>
+          `;
+        });
+        tableHTML += `</tbody></table>`;
+
+        // Build the impact checkboxes HTML based on checkbox states
+        const impactRetail = document.getElementById("impactRetail").checked;
+        const impactCIAM = document.getElementById("impactCIAM").checked;
+        const impactIntellect = document.getElementById("impactIntellect").checked;
+        const impactHTML = `
+          <ol type="i" class="sub-list">
+            <li>Retail – ${impactRetail ? "Yes" : "No"}</li>
+            <li>CIAM – ${impactCIAM ? "Yes" : "No"}</li>
+            <li>Intellect – ${impactIntellect ? "Yes" : "No"}</li>
+          </ol>
+        `;
+
+        // Replace placeholders in the email template
+        let emailContent = emailTemplate
+          .replace(/{DATE}/g, formattedDateFull)
+          .replace(/{TIME}/g, timeInput)
+          .replace(/{FIX_DETAILS}/g, fixDetailsInput)
+          .replace(/{REVERT_PLAN}/g, revertPlanInput)
+          .replace(/{VALIDATION_PLAN}/g, validationPlanInput)
+          .replace(/{JIRA_TABLE}/g, tableHTML)
+          .replace(/{IMPACT_CHECKBOXES}/g, impactHTML)
+          .replace(/{COMPONENT_NAME}/g, componentNameInput);
+
+        // For the header, replace the full date with the subject date format
+        emailContent = emailContent.replace(formattedDateFull, formattedDateSubject);
+
+        document.getElementById("emailOutput").innerHTML = emailContent;
+      });
+    </script>
+    <!-- Bootstrap JS Bundle (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
